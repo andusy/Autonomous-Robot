@@ -25,10 +25,10 @@
 
 //Initial servo positioning
 Servo pan_servo, tilt_servo, grip_servo;
-int pan_init = 90, tilt_init = 100, grip_init = 50;
+int pan_init = 90, tilt_init = 90, grip_init = 40;
 
 //Servo positioning of basket
-int pan_pos = 90, tilt_pos = 50, grip_pos = 40; 
+goal_height = 115, grip_pos = 40; 
 
 //IR
 #define IRCOMM 9
@@ -42,7 +42,7 @@ QSerial IRserial;
 #define PIVOT45 200
 #define PIVOT180 500
 #define LEFT 0
-#define RIGHT 0
+#define RIGHT 1
 
 void setup() {
 
@@ -81,29 +81,71 @@ void setup() {
 }
 
 void loop() {
- /* tilt_servo.write(160);
-  delay(300);
-  tilt_servo.write(30);
-  delay(300);*/
+ /* 
+  //Set default servo positions for each iteration which is the height of the ball's pickup location
+  pan_servo.write(pan_init);
+  tilt_servo.write(tilt_init);
+  grip_servo.write(grip_init);
 
 /*IR
-  char val = IRserial.receive(200);
-  Serial.println(val);
-  delay(200);
+  char ball_loc = -1;
+  
+  //Continuously reads IR values until the value is not -1
+  while (ball_loc == -1){
+    ball_loc = IRserial.receive(200); //Reads the ball's location
+    Serial.println(ball_loc);
+    delay(200);
+  }
+
+  //Turns towards the ball's location
+  if (ball_loc == 2){ //Right location
+    pivot(RIGHT,90);
+  } else if (ball_loc == 0){ //Left location
+    pivot(LEFT,90);
+  } 
   
   //IR Range
+  //Moves forward in ball location along the black line until it gets stopped by IR range indicator
   int range = analogRead(IRANGE);
   Serial.print("Range Reading => ");
   Serial.println(range);
   delay(250);
   Forward();
-  
+
+  //Stops the robot when it is near the end of the play field
   if(range > 500)
   {
      Stop(); 
      delay(1000);
   }
-  */
+
+  //Grips the ball and changes the tilt to be the goal
+  grip_servo.write(150);
+  tilt_servo.write(goal_height);
+
+  //Rotates 180 
+  pivot(RIGHT,180);
+
+  //Follows the line back until all three sensors are on black
+
+  //Turns in direction of basket
+  if (ball_loc == 2){ //Right location
+    pivot(LEFT,90);
+  } else if (ball_loc == 0){ //Left location
+    pivot(RIGHT,90);
+  } 
+
+  //Follows the line to the basket
+
+  //Opens the grip/drops ball into basket
+  grip_servo.write(40);
+
+  //Rotates 180
+  pivot(RIGHT, 180);
+
+  //Follows the line back to original position
+
+   */
  
   //Read linetracker sensor values
   int leftVal = analogRead(LTL);
