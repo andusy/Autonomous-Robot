@@ -162,8 +162,10 @@ void loop() {
    Serial.print(rightVal);
    Serial.print("  \n");
 
-   Pivot(LEFT,50);
-   Pivot(RIGHT,50);
+   Pivot(LEFT,253);
+   delay(2000);
+   Pivot(RIGHT,260);
+   delay(2000);
    
 }
 
