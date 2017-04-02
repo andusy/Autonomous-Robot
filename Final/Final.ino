@@ -99,9 +99,9 @@ void loop() {
 
   //Turns towards the ball's location
   if (ball_loc == '2'){ //Right location
-    pivot(RIGHT,90);
+    pivot(RIGHT,260);
   } else if (ball_loc == '0'){ //Left location
-    pivot(LEFT,90);
+    pivot(LEFT,253);
   } 
   
   //IR Range
@@ -124,15 +124,15 @@ void loop() {
   tilt_servo.write(goal_height);
 
   //Rotates 180 
-  pivot(RIGHT,180);
+  pivot(RIGHT,520);
 
   //Follows the line back until all three sensors are on black
 
   //Turns in direction of basket
   if (ball_loc == '2'){ //Right location
-    pivot(LEFT,90);
+    pivot(LEFT,253);
   } else if (ball_loc == '0'){ //Left location
-    pivot(RIGHT,90);
+    pivot(RIGHT,260);
   } 
 
   //Follows the line to the basket
@@ -141,7 +141,7 @@ void loop() {
   grip_servo.write(40);
 
   //Rotates 180
-  pivot(RIGHT, 180);
+  pivot(RIGHT, 520);
 
   //Follows the line back to original position
 
