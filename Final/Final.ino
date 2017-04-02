@@ -23,8 +23,12 @@
 #define TILT 9
 #define GRIP 10
 
+//Initial servo positioning
 Servo pan_servo, tilt_servo, grip_servo;
-int pan_pos = 90, tilt_pos = 30, grip_pos = 40; 
+int pan_init = 90, tilt_init = 30, grip_init = 40;
+
+//Servo positioning of basket
+int pan_pos = 90, tilt_pos = 50, grip_pos = 40; 
 
 //IR
 #define IRCOMM 9
@@ -65,9 +69,9 @@ void setup() {
   grip_servo.attach(GRIP);
   
   //Set default servo positions
-  pan_servo.write(pan_pos);
-  tilt_servo.write(tilt_pos);
-  grip_servo.write(grip_pos);
+  pan_servo.write(pan_init);
+  tilt_servo.write(tilt_init);
+  grip_servo.write(grip_init);
   
   //Serial setup
   Serial.begin(9600); 
