@@ -79,7 +79,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   //IR
   char val = IRserial.receive(200);
   Serial.println(val);
@@ -109,6 +108,13 @@ void Forward() {
   analogWrite(E2,DRIVESPEED); 
   
   return;
+}
+
+void Stop()
+{
+  //Motor to drive a speed xxx
+  analogWrite(E1,0);
+  analogWrite(E2,0);
 }
 
 //Read the following code carefully 
