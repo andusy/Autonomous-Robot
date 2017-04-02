@@ -88,19 +88,19 @@ void loop() {
   grip_servo.write(grip_init);
 
 /*IR
-  char ball_loc = -1;
+  char ball_loc = '-1';
   
   //Continuously reads IR values until the value is not -1
-  while (ball_loc == -1){
+  while (ball_loc == '-1'){
     ball_loc = IRserial.receive(200); //Reads the ball's location
     Serial.println(ball_loc);
     delay(200);
   }
 
   //Turns towards the ball's location
-  if (ball_loc == 2){ //Right location
+  if (ball_loc == '2'){ //Right location
     pivot(RIGHT,90);
-  } else if (ball_loc == 0){ //Left location
+  } else if (ball_loc == '0'){ //Left location
     pivot(LEFT,90);
   } 
   
@@ -129,9 +129,9 @@ void loop() {
   //Follows the line back until all three sensors are on black
 
   //Turns in direction of basket
-  if (ball_loc == 2){ //Right location
+  if (ball_loc == '2'){ //Right location
     pivot(LEFT,90);
-  } else if (ball_loc == 0){ //Left location
+  } else if (ball_loc == '0'){ //Left location
     pivot(RIGHT,90);
   } 
 
