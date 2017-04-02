@@ -25,7 +25,7 @@
 
 //Initial servo positioning
 Servo pan_servo, tilt_servo, grip_servo;
-int pan_init = 90, tilt_init = 30, grip_init = 40;
+int pan_init = 90, tilt_init = 100, grip_init = 120;
 
 //Servo positioning of basket
 int pan_pos = 90, tilt_pos = 50, grip_pos = 40; 
@@ -79,6 +79,11 @@ void setup() {
 }
 
 void loop() {
+  tilt_servo.write(160);
+  delay(300);
+  tilt_servo.write(30);
+  delay(300);
+  /*
   //IR
   char val = IRserial.receive(200);
   Serial.println(val);
@@ -95,7 +100,7 @@ void loop() {
   {
      Stop(); 
      while(true){}
-  }
+  }*/
 }
 
 void Forward() {
