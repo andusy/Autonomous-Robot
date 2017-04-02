@@ -31,7 +31,7 @@ int pan_init = 90, tilt_init = 90, grip_init = 40;
 int goal_height = 115, grip_pos = 40; 
 
 //IR
-#define IRCOMM 9
+#define IRCOMM 11
 QSerial IRserial;
 
 //IR Range Sensor
@@ -80,11 +80,7 @@ void setup() {
 
 }
 
-void loop() {
-  //Motor high
-  digitalWrite(M1,HIGH);
-  digitalWrite(M2,HIGH);
-  
+void loop() {  
  /* 
   //Set default servo positions for each iteration which is the height of the ball's pickup location
   pan_servo.write(pan_init);
@@ -92,38 +88,43 @@ void loop() {
   grip_servo.write(grip_init);*/
 
   //IR
-  char ball_loc = '-1';
+  /*
+  int ball_loc = '3';
   
   //Continuously reads IR values until the value is not -1
-  while (ball_loc == '-1'){
+  while (ball_loc == '3'){
     ball_loc = IRserial.receive(200); //Reads the ball's location
     Serial.println(ball_loc);
     delay(200);
   }
 
   //Turns towards the ball's location
-  if (ball_loc == '2'){ //Right location
+  if (ball_loc == 32){ //Right location
     Pivot(RIGHT,260);
-  } else if (ball_loc == '0'){ //Left location
+  } else if (ball_loc == 30){ //Left location
     Pivot(LEFT,253);
-  } else if (ball_loc == '1'){
-    Pivot(LEFT, 2000);
-  }
-  
-  /*//IR Range
+  } else if (ball_loc == 31){
+    Pivot(LEFT, 250);
+  }*/
+
+  /*
+
+  //IR Range
   //Moves forward in ball location along the black line until it gets stopped by IR range indicator
   int range = analogRead(IRANGE);
   Serial.print("Range Reading => ");
   Serial.println(range);
   delay(250);
-  Forward();
+
+  LineTracker();
+  
+  while(range < 500){
+      Stop(); 
+      delay(1000);
+  }
 
   //Stops the robot when it is near the end of the play field
-  if(range > 500)
-  {
-     Stop(); 
-     delay(1000);
-  }
+
 
   //Grips the ball and changes the tilt to be the goal
   grip_servo.write(150);
@@ -133,7 +134,8 @@ void loop() {
   pivot(RIGHT,520);
 
   //Follows the line back until all three sensors are on black
-
+  LineTracker();
+  
   //Turns in direction of basket
   if (ball_loc == '2'){ //Right location
     pivot(LEFT,253);
@@ -142,88 +144,28 @@ void loop() {
   } 
 
   //Follows the line to the basket
+  //Line centred, drive straight
+  LineTracker();
 
+  //Stop
+  while(range < 500){
+      Stop(); 
+      delay(1000);
+  }
+  
   //Opens the grip/drops ball into basket
   grip_servo.write(40);
 
   //Rotates 180
   pivot(RIGHT, 520);
 
-  //Follows the line back to original position
-
-   */
-  /*
-  //Read linetracker sensor values
-  int leftVal = analogRead(LTL);
-  int centreVal = analogRead(LTC);
-  int rightVal = analogRead(LTR);
-
-  Serial.print("Left: ");
-  Serial.print(leftVal);
-  Serial.print("  ");
-  Serial.print("Center: ");
-  Serial.print(centreVal);
-  Serial.print("  ");
-  Serial.print("Right: ");
-  Serial.print(rightVal);
-  Serial.print("  \n");
+  //Follows the line back to original position   
+  LineTracker();
 
   /*Pivot(LEFT,253);
   delay(2000);
   Pivot(RIGHT,260);
-  delay(2000);
-  
-  //Line centred, drive straight
-  if(leftVal<LTHRES && centreVal>CTHRES && rightVal<RTHRES){
-    analogWrite(E1,DRIVESPEED);
-    analogWrite(E2,DRIVESPEED);  //Please to use the lowest speed that can make the robot move!!!
-  }
- 
-  //Veering right, move power to right motor
-  else if(leftVal>LTHRES && centreVal<CTHRES && rightVal<RTHRES){
-    analogWrite(E1,DRIVESPEED);
-    analogWrite(E2,400);
-  }
- 
-  else if(leftVal>LTHRES && centreVal>CTHRES && rightVal<RTHRES){
-    analogWrite(E1,DRIVESPEED);
-    analogWrite(E2,400);
-  }
- 
-  //Veering left, move power to left motor
-  else if(leftVal<LTHRES && centreVal<CTHRES && rightVal>RTHRES){
-    analogWrite(E1,400);
-    analogWrite(E2,DRIVESPEED);
-  }
- 
-  else if(leftVal<LTHRES && centreVal>CTHRES && rightVal>RTHRES){
-    analogWrite(E1,400);
-    analogWrite(E2,DRIVESPEED);
-  }
- 
-  else if (leftVal<LTHRES && centreVal<CTHRES && rightVal<RTHRES){ //for other cases, stop driving first.
-    analogWrite(E1,0);
-    analogWrite(E2,0);
-    delay(3000);    //wait a sec, to disdinguish between the going straight move and spin move.
-    //then spin to find the line
-    digitalWrite(M1,LOW);
-    digitalWrite(M2,HIGH);
-    analogWrite(E1,130);
-    analogWrite(E2,130);
-
-  while(true){
-    leftVal = analogRead(LTL);
-    centreVal = analogRead(LTC);
-    rightVal = analogRead(LTR);
-       
-    if( leftVal > LTHRES || centreVal > CTHRES || rightVal > RTHRES )
-    {
-      analogWrite(E1,0);
-      analogWrite(E2,0);
-      while(true){}
-    }      
-  }
-  */
+  delay(2000);*/
 }
 
 void Forward() {
@@ -277,3 +219,75 @@ void Pivot(int whichWay, int angle){
     return;    
 }
 
+/*void LineTracker(){
+  //Motor high
+  Forward();
+
+  //Read linetracker sensor values
+  int leftVal = analogRead(LTL);
+  int centreVal = analogRead(LTC);
+  int rightVal = analogRead(LTR);
+  //Optional: reflect the values to the monitor
+  Serial.print("Left: ");
+  Serial.print(leftVal);
+  Serial.print("  ");
+  Serial.print("Center: ");
+  Serial.print(centreVal);
+  Serial.print("  ");
+  Serial.print("Right: ");
+  Serial.print(rightVal);
+  Serial.print("  \n");
+
+
+  //Line centred, drive straight
+  if(leftVal<LTHRES && centreVal>CTHRES && rightVal<RTHRES){
+    analogWrite(E1,DRIVESPEED);
+    analogWrite(E2,DRIVESPEED);  //Please to use the lowest speed that can make the robot move!!!
+  }
+ 
+  //Veering right, move power to right motor
+  else if(leftVal>LTHRES && centreVal<CTHRES && rightVal<RTHRES){
+    analogWrite(E1,DRIVESPEED);
+    analogWrite(E2,400);
+  }
+ 
+  else if(leftVal>LTHRES && centreVal>CTHRES && rightVal<RTHRES){
+    analogWrite(E1,DRIVESPEED);
+    analogWrite(E2,400);
+  }
+ 
+  //Veering left, move power to left motor
+  else if(leftVal<LTHRES && centreVal<CTHRES && rightVal>RTHRES){
+    analogWrite(E1,400);
+    analogWrite(E2,DRIVESPEED);
+  }
+ 
+  else if(leftVal<LTHRES && centreVal>CTHRES && rightVal>RTHRES){
+    analogWrite(E1,400);
+    analogWrite(E2,DRIVESPEED);
+  }
+ 
+  else if (leftVal<LTHRES && centreVal<CTHRES && rightVal<RTHRES){ //for other cases, stop driving first.
+    analogWrite(E1,0);
+    analogWrite(E2,0);
+    delay(3000);    //wait a sec, to disdinguish between the going straight move and spin move.
+    //then spin to find the line
+    digitalWrite(M1,LOW);
+    digitalWrite(M2,HIGH);
+    analogWrite(E1,130);
+    analogWrite(E2,130);
+
+  while(true){
+    leftVal = analogRead(LTL);
+    centreVal = analogRead(LTC);
+    rightVal = analogRead(LTR);
+       
+    if( leftVal > LTHRES || centreVal > CTHRES || rightVal > RTHRES )
+    {
+      analogWrite(E1,0);
+      analogWrite(E2,0);
+      while(true){}
+    }      
+  }
+}
+*/
