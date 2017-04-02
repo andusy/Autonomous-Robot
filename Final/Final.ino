@@ -15,7 +15,7 @@
 
 //Linetracking Threshold
 #define LTHRES 900
-#define CTHRES 850
+#define CTHRES 900
 #define RTHRES 900
 
 //Servo
@@ -25,7 +25,7 @@
 
 //Initial servo positioning
 Servo pan_servo, tilt_servo, grip_servo;
-int pan_init = 90, tilt_init = 100, grip_init = 120;
+int pan_init = 90, tilt_init = 100, grip_init = 50;
 
 //Servo positioning of basket
 int pan_pos = 90, tilt_pos = 50, grip_pos = 40; 
@@ -38,9 +38,11 @@ QSerial IRserial;
 #define IRANGE A5
 
 //Constant
-#define DRIVESPEED 80
+#define DRIVESPEED 500
 #define PIVOT45 200
 #define PIVOT180 500
+#define LEFT 0
+#define RIGHT 0
 
 void setup() {
 
@@ -79,12 +81,12 @@ void setup() {
 }
 
 void loop() {
-  tilt_servo.write(160);
+ /* tilt_servo.write(160);
   delay(300);
   tilt_servo.write(30);
-  delay(300);
-  /*
-  //IR
+  delay(300);*/
+
+/*IR
   char val = IRserial.receive(200);
   Serial.println(val);
   delay(200);
@@ -99,13 +101,33 @@ void loop() {
   if(range > 500)
   {
      Stop(); 
-     while(true){}
-  }*/
+     delay(1000);
+  }
+  */
+ 
+  //Read linetracker sensor values
+  int leftVal = analogRead(LTL);
+  int centreVal = analogRead(LTC);
+  int rightVal = analogRead(LTR);
+
+   Serial.print("Left: ");
+   Serial.print(leftVal);
+   Serial.print("  ");
+   Serial.print("Center: ");
+   Serial.print(centreVal);
+   Serial.print("  ");
+   Serial.print("Right: ");
+   Serial.print(rightVal);
+   Serial.print("  \n");
+
+   Pivot(LEFT,50);
+   Pivot(RIGHT,50);
+   
 }
 
 void Forward() {
   //Motors to drive forward
-  digitalWrite(M1,LOW);   
+  digitalWrite(M1,HIGH);   
   digitalWrite(M2,HIGH);  //I make it spin in case you copy my code!
   
   //Motor to drive a speed xxx
@@ -128,8 +150,8 @@ void Pivot(int whichWay, int angle){
     if( whichWay == LEFT )
     {//Pivot LEFT
       //Motors to drive forward
-      digitalWrite(M1,LOW);   
-      digitalWrite(M2,HIGH);
+      digitalWrite(M1,HIGH);   
+      digitalWrite(M2,LOW);
   
       //Motor to drive a speed xxx
       analogWrite(E1,DRIVESPEED);
@@ -138,8 +160,8 @@ void Pivot(int whichWay, int angle){
     else if( whichWay == RIGHT )
     {//Pivot RIGHT
       //Motors to drive forward
-      digitalWrite(M1,HIGH);   
-      digitalWrite(M2,LOW);
+      digitalWrite(M1,LOW);   
+      digitalWrite(M2,HIGH);
   
      //Motor to drive a speed xxx
      analogWrite(E1,DRIVESPEED);
@@ -147,6 +169,9 @@ void Pivot(int whichWay, int angle){
     }  
     
     delay(angle);
+
+    analogWrite(E1, 0);
+    analogWrite(E2, 0);
 
     return;    
 }
