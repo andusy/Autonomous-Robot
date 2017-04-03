@@ -211,7 +211,7 @@ void loop() {
       delay(50);
       rightVal = analogRead(LTR);
       while (rightVal < RTHRES) {    
-        Pivot(RIGHT,15);
+        Pivot(RIGHT,20);
         rightVal = analogRead(LTR);
         delay(1);
         
