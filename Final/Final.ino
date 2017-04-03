@@ -28,7 +28,7 @@ int ball_loc = 0;
 
 //Initial servo positioning
 Servo pan_servo, tilt_servo, grip_servo;
-int pan_init = 90, tilt_init = 62, grip_init = 0;
+int pan_init = 90, tilt_init = 63, grip_init = 0;
 
 //Servo positioning of basket
 int goal_height = 110, grip_pos = 0; 
@@ -36,7 +36,7 @@ int goal_height = 110, grip_pos = 0;
 int irSearch = 0;
 
 //IR
-#define IRCOMM 11
+#define IRCOMM 3
 QSerial IRserial;
 
 //IR Range Sensor
@@ -93,21 +93,23 @@ void loop() {
   //IR
   ball_loc = 0;
   irSearch = 0;
-  //Continuously reads IR values until the value is not 0,-1, or -2
-  while (ball_loc == 0 || ball_loc == -1 || ball_loc == -2){
-    if (irSearch == 210){
-      irSearch = 0;
-      delay(500);
-    }
-    
-    pan_servo.write(irSearch);
-    
-    ball_loc = IRserial.receive(200); //Reads the ball's location
-    Serial.println(ball_loc);
-    delay(300);
-    irSearch += 30;
-  }
+
+  tilt_servo.write(90);
   
+  //Continuously reads IR values until the value is not 0,-1, or -2
+  while (ball_loc != 48 && ball_loc != 49 && ball_loc != 50){
+    /*if (irSearch > 180){
+      irSearch = 0;
+    }
+
+    int i = 0;
+    pan_servo.write(irSearch);
+    while (ball_loc != 48 && ball_loc != 49 && ball_loc != 50 && i < 10){*/
+      ball_loc = IRserial.receive(200); //Reads the ball's location
+      
+      Serial.println(ball_loc);
+  }
+
   //Set default servo positions
   pan_servo.write(pan_init);
   tilt_servo.write(tilt_init);
@@ -119,7 +121,7 @@ void loop() {
       delay(50);
       rightVal = analogRead(LTR);
       while (rightVal < RTHRES) {    
-        Pivot(RIGHT,7);
+        Pivot(RIGHT,4);
         rightVal = analogRead(LTR);
         delay(1);
         
@@ -131,7 +133,7 @@ void loop() {
       delay(50);
       leftVal = analogRead(LTL);
       while (leftVal < LTHRES) {    
-        Pivot(LEFT,8);
+        Pivot(LEFT,4);
         leftVal = analogRead(LTL);
         delay(1);     
       }
@@ -193,7 +195,7 @@ void loop() {
       delay(50);
       rightVal = analogRead(LTR);
       while (rightVal < RTHRES) {    
-        Pivot(RIGHT,7);
+        Pivot(RIGHT,4);
         rightVal = analogRead(LTR);
         delay(1);
         
@@ -205,7 +207,7 @@ void loop() {
       delay(50);
       leftVal = analogRead(LTL);
       while (leftVal < LTHRES) {    
-        Pivot(LEFT,7);
+        Pivot(LEFT,4);
         leftVal = analogRead(LTL);
         delay(1);     
       }
@@ -361,8 +363,8 @@ boolean LineTracker(){
    }
    
     else if (leftVal<LTHRES && centreVal<CTHRES && rightVal<RTHRES){ //for other cases, stop driving first.
-      analogWrite(E1,130);
-      analogWrite(E2,160);
+      analogWrite(E1,100);
+      analogWrite(E2,80);
     }
     else if (leftVal>LTHRES && centreVal>CTHRES && rightVal>RTHRES){  
       Backup();
