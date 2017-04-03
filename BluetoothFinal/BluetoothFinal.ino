@@ -51,6 +51,9 @@ QSerial IRserial;
 #define LEFT 0
 #define RIGHT 1
 
+//Bluetooth
+byte a;
+
 void setup() {
 
   //Pin modes
@@ -83,13 +86,28 @@ void setup() {
   grip_servo.write(grip_init);
   
   //Serial setup
-  Serial.begin(9600); 
+  //Serial.begin(9600); 
 
+  //Bluetooth setup;
+  Serial.begin(115200);
 }
 
 void loop() {  
-  int rightVal, leftVal;
+  ball_loc = -1;
+
+  Pivot(RIGHT, 4800);
   
+  //Bluetooth loop
+  while (ball_loc == -1){
+  if(Serial.available()){
+  ball_loc = Serial.read();
+  Serial.print(ball_loc);
+  }
+  delay(50);
+  }
+
+  int rightVal, leftVal;
+  /*
   //IR
   ball_loc = 0;
   irSearch = 0;
@@ -107,7 +125,7 @@ void loop() {
     delay(300);
     irSearch += 30;
   }
-  
+  */
   //Set default servo positions
   pan_servo.write(pan_init);
   tilt_servo.write(tilt_init);
@@ -131,7 +149,7 @@ void loop() {
       delay(50);
       leftVal = analogRead(LTL);
       while (leftVal < LTHRES) {    
-        Pivot(LEFT,8);
+        Pivot(LEFT,15);
         leftVal = analogRead(LTL);
         delay(1);     
       }
@@ -193,7 +211,7 @@ void loop() {
       delay(50);
       rightVal = analogRead(LTR);
       while (rightVal < RTHRES) {    
-        Pivot(RIGHT,7);
+        Pivot(RIGHT,15);
         rightVal = analogRead(LTR);
         delay(1);
         

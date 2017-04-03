@@ -33,8 +33,6 @@ int pan_init = 90, tilt_init = 62, grip_init = 0;
 //Servo positioning of basket
 int goal_height = 110, grip_pos = 0; 
 
-int irSearch = 0;
-
 //IR
 #define IRCOMM 11
 QSerial IRserial;
@@ -89,32 +87,23 @@ void setup() {
 
 void loop() {  
   int rightVal, leftVal;
-  
-  //IR
-  ball_loc = 0;
-  irSearch = 0;
-  //Continuously reads IR values until the value is not 0,-1, or -2
-  while (ball_loc == 0 || ball_loc == -1 || ball_loc == -2){
-    if (irSearch == 210){
-      irSearch = 0;
-      delay(500);
-    }
-    
-    pan_servo.write(irSearch);
-    
-    ball_loc = IRserial.receive(200); //Reads the ball's location
-    Serial.println(ball_loc);
-    delay(300);
-    irSearch += 30;
-  }
-  
   //Set default servo positions
   pan_servo.write(pan_init);
   tilt_servo.write(tilt_init);
   grip_servo.write(grip_init);
- 
+  
+  //IR
+  
+  /*
+  //Continuously reads IR values until the value is not -1
+  while (ball_loc == 3){
+    ball_loc = IRserial.receive(200); //Reads the ball's location
+    Serial.println(ball_loc);
+    delay(200);
+  }
+  */
   //Turns towards the ball's location
-  if (ball_loc == 48){ //Right location
+  if (ball_loc == 0){ //Right location
       Pivot(RIGHT,200);
       delay(50);
       rightVal = analogRead(LTR);
@@ -125,7 +114,7 @@ void loop() {
         
       }
       delay(500);
-  } else if (ball_loc == 50){ //Left location
+  } else if (ball_loc == 2){ //Left location
       //Rotates 180 
       Pivot(LEFT,200);
       delay(50);
@@ -188,7 +177,7 @@ void loop() {
   delay(150);
 
   //Turns in direction of basket
-  if (ball_loc == 50){ //Left location
+  if (ball_loc == 2){ //Right location
       Pivot(RIGHT,200);
       delay(50);
       rightVal = analogRead(LTR);
@@ -199,7 +188,7 @@ void loop() {
         
       }
       delay(500);     
-    } else if (ball_loc == 48){ //Right location
+    } else if (ball_loc == 0){ //Left location
        //Rotates 180 
       Pivot(LEFT,200);
       delay(50);
@@ -247,6 +236,12 @@ void loop() {
 
   Stop();
   delay(100);
+
+  ball_loc++;
+
+    if(ball_loc == 3){
+      ball_loc = 0;
+    }
 }
 
 void Forward() {
@@ -334,35 +329,35 @@ boolean LineTracker(){
   Serial.print("  \n");
   
    if(leftVal<LTHRES && centreVal>CTHRES && rightVal<RTHRES){
-   analogWrite(E1,130);
-   analogWrite(E2,130);  //Please to use the lowest speed that can make the robot move!!!
+   analogWrite(E1,140);
+   analogWrite(E2,150);  //Please to use the lowest speed that can make the robot move!!!
    }
    
-   //Veering right, move power to right motorp;3 
-   else if(leftVal>LTHRES && centreVal<CTHRES & rightVal<RTHRES){
-   analogWrite(E1,160);
-   analogWrite(E2,130);
+   //Veering right, move power to right motor
+   else if(leftVal>LTHRES && centreVal<CTHRES && rightVal<RTHRES){
+   analogWrite(E1,170);
+   analogWrite(E2,140);
    }
    
    else if(leftVal>LTHRES && centreVal>CTHRES && rightVal<RTHRES){
-   analogWrite(E1,160);
-   analogWrite(E2,130);
+   analogWrite(E1,170);
+   analogWrite(E2,140);
    }
    
    //Veering left, move power to left motor
    else if(leftVal<LTHRES && centreVal<CTHRES && rightVal>RTHRES){
-   analogWrite(E1,130);
-   analogWrite(E2,160);
+   analogWrite(E1,140);
+   analogWrite(E2,170);
    }
    
    else if(leftVal<LTHRES && centreVal>CTHRES && rightVal>RTHRES){
-   analogWrite(E1,130);
-   analogWrite(E2,160);
+   analogWrite(E1,140);
+   analogWrite(E2,170);
    }
    
     else if (leftVal<LTHRES && centreVal<CTHRES && rightVal<RTHRES){ //for other cases, stop driving first.
-      analogWrite(E1,130);
-      analogWrite(E2,160);
+      analogWrite(E1,140);
+      analogWrite(E2,170);
     }
     else if (leftVal>LTHRES && centreVal>CTHRES && rightVal>RTHRES){  
       Backup();
@@ -372,12 +367,3 @@ boolean LineTracker(){
     }
     return true;
 }
-
-
-
-
-
-
-
-
-
