@@ -1,0 +1,4 @@
+- The bot starts at a stationary position at the central intersection, and facing away from the goal
+- The IR  beacons  transmit  their  fixed geographic position numbers (ASCII '0',  '1',  or  '2')  approximately  10  times  per second  when  enabled  by  their  toggle switch  (these  geographic  position numbers  never  change)
+- The balls will be manually placed, one at a time, and the beacons will be enabled to transmit the location
+- The bot will then pick up the ball from one of the fixed locations and drop it into the goal
