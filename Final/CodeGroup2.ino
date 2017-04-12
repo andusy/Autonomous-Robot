@@ -331,10 +331,10 @@ boolean LineTracker(){
   
    if(leftVal<LTHRES && centreVal>CTHRES && rightVal<RTHRES){
    analogWrite(E1,130);
-   analogWrite(E2,130);  //Please to use the lowest speed that can make the robot move!!!
+   analogWrite(E2,130);  
    }
    
-   //Veering right, move power to right motorp;3 
+   //Veering right, move power to right motor
    else if(leftVal>LTHRES && centreVal<CTHRES & rightVal<RTHRES){
    analogWrite(E1,160);
    analogWrite(E2,130);
@@ -356,7 +356,7 @@ boolean LineTracker(){
    analogWrite(E2,160);
    }
    
-    else if (leftVal<LTHRES && centreVal<CTHRES && rightVal<RTHRES){ //for other cases, stop driving first.
+    else if (leftVal<LTHRES && centreVal<CTHRES && rightVal<RTHRES){ //Slow down and turn right
       analogWrite(E1,100);
       analogWrite(E2,80);
     }
