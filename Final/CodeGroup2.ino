@@ -1,7 +1,7 @@
 	/*
 	ELEC299 - Winter2017
 	
-	Final.ino
+	CodeGroup2.ino
 	
 	Group Number: 2
 	
