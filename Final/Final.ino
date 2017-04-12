@@ -1,3 +1,16 @@
+	/*
+	ELEC299 - Winter2017
+	
+	Final.ino
+	
+	Group Number: 2
+	
+	Group Members:
+	Andus Yu (10192081)
+	Darian Lio (10181505)
+	Sean Lee (10199658)
+	*/
+
 //Include Libraries
 #include <Servo.h>
 #include <QSerial.h>
