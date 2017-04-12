@@ -23,8 +23,7 @@
 #define TILT 9
 #define GRIP 10
 
-
-int ball_loc = 0;  
+int ball_loc;  
 
 //Initial servo positioning
 Servo pan_servo, tilt_servo, grip_servo;
@@ -96,18 +95,9 @@ void loop() {
 
   tilt_servo.write(90);
   
-  //Continuously reads IR values until the value is not 0,-1, or -2
+  //Continuously reads IR values until the value is not 0,-1, and -2
   while (ball_loc != 48 && ball_loc != 49 && ball_loc != 50){
-    /*if (irSearch > 180){
-      irSearch = 0;
-    }
-
-    int i = 0;
-    pan_servo.write(irSearch);
-    while (ball_loc != 48 && ball_loc != 49 && ball_loc != 50 && i < 10){*/
       ball_loc = IRserial.receive(200); //Reads the ball's location
-      
-      Serial.println(ball_loc);
   }
 
   //Set default servo positions
@@ -138,20 +128,11 @@ void loop() {
         delay(1);     
       }
       delay(500);
-  }  
+  }  //No straight location because the robot is facing '1' by default
   
-  
-
-  
-  //IR Range
-  //Moves forward in ball location along the black line until it gets stopped by IR range indicator
-  //int range = analogRead(IRANGE);
-  //Serial.print("Range Reading => ");
-  //Serial.println(range);
   delay(250);
 
-
-  //Stops the robot when it is near the end of the play fielD
+  //Stops the robot when it is near the end of the play field
   while(LineTracker()){
   }
 
@@ -165,7 +146,6 @@ void loop() {
   tilt_servo.write(goal_height);
   delay(500);
 
-  
   Backup();
   delay(100);
   Stop();
@@ -282,8 +262,7 @@ void Stop()
   analogWrite(E2,0);
 }
 
-//Read the following code carefully 
-//Very important to your final project
+//Code to pivot the robot
 void Pivot(int whichWay, int angle){ 
     if( whichWay == LEFT )
     {//Pivot LEFT
@@ -314,6 +293,8 @@ void Pivot(int whichWay, int angle){
     return;   
 }
 
+//Function that the robot uses to follow the line
+//Returns false if all 3 sensors are completely off of the line
 boolean LineTracker(){
 
   //Motors to drive straight
